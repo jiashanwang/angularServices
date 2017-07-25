@@ -1,0 +1,105 @@
+﻿<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zn-cn" ng-app="myApp">
+<head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, minimal-ui">
+    <title>angular--services.html</title>
+    <script src="js/angular.min.js"></script>
+    <script src="js/angular-ui-router.min.js"></script>
+    <script src="js/jquery-1.11.1.min.js"></script>
+    <!--<script src="app.js"></script>-->
+</head>
+<body ng-controller="q">
+    <h1>$q service API reference</h1>
+    <p>$q服务更多的是创建一个promise对象，对异步加载进行处理，让异步操作同步化</p>
+    <div id="q"></div>
+    <script type="text/javascript">
+        //创建angular 模型
+        var app = angular.module("myApp", []);
+        //定义一个控制器  myCtrl
+        app.controller("q", myController);
+        //给控制器注入所需要的内置服务     --每个控制器里面没有注入的服务是不能在控制器内部被引用的
+        myController.$inject = ["$scope", "$q"];
+        //定义控制器的具体业务逻辑
+        function myController($scope, $q) {
+            //$q 服务是AngularJS中自己封装实现的一种Promise实现，$q 常用的方法：
+            //defer():创建一个deferred对象，这个对象可以执行几个常用的方法，比如 resolve,reject,notify 等
+            // all() 传入Promise的数组，批量执行，返回一个promise对象
+            //when() 传入一个不确定的参数，如果符合Promise标准，就返回一个promise对象
+            ////在promise 中定义了三种状态：等待状态，完成状态，拒绝状态
+            //关于状态有几个规定：
+            //1.状态的变更是不可逆的
+            //2.等待状态可以变成完成或者拒绝
+            //在$q中，可以使用resolve方法，变成完成状态，使用reject方法，变成拒绝状态
+
+            //定义一个deferred 对象
+            var defer1 = $q.defer();
+            //创建promise实例
+            var promise = defer1.promise;
+            promise.then(function () {
+                //success
+            }, function () {
+                //error
+            }, function () {
+                //status
+            })
+            .catch(function () {
+                //铺货错误
+            })
+            .finally(function () {
+                //无论何种情况下都执行
+            });
+            //通过$q服务创建延迟对象$q.defer()，再创建promised的实例用法
+            //**************
+            //$.ajax({                      
+            //    url: "$location.html",
+            //    success: function (data) {
+            //        defer1.resolve(data);   //先把数据挂靠在 defer1对象上，通过defer1创建的实例promise 会把未来可能返回的数据作为参数传递进去
+            //    },
+            //    error: function (data) {
+            //        defer1.reject(data);
+            //    }
+            //});
+            //var promise = defer1.promise;
+            //promise.then(function (data) {
+            //    alert("拿到数据了" + data);
+            //}, function (data) {
+            //    alert("报错" + data)
+            //});
+            //$q.all()用法：  传入一个promise数组，如果数组里面的都成功，才会之后后面的成功方法
+            //首先定义两个方法；
+            function fn1() {
+                console.log("fn1");
+                return "hahahaha";
+            };
+            function fn2() {
+                console.log("fn2");
+                return "eehenneenneen";
+            };
+            //一般的逻辑需求是，都成功的时候开始执行另一个回调函数     这里着重强调的是$q.all()可以同时绑定多个事件监听的用法
+            $q.all([fn1(), fn2()])
+            .then(function (data) {
+                console.log("promise　数组都成功我才会执行" + data);      //这里的data拿到的是两个成功方法返回的数据的和   返回一个拼接的字符串
+            }, function (data) {
+                console.log("promise 数组只要有一个失败，我就不执行" + data);
+            });
+            //$q.when()方法 --》when方法中可以传入一个参数，这个参数可能是一个值，可能是一个符合promise标准的外部对象
+            var fn3 = function () {
+                console.log("funcA");
+                return "hello ,funA";
+            };
+            var fn4 = function () {
+                console.log("funcT");
+                return "hello ,funT";
+            };
+            $q.when([fn3(),fn4()]).then(function (result) {
+                console.log(result);      //返回一个数组
+            })
+        }                                                           
+
+    </script>
+</body>
+</html>                                               

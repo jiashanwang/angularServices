@@ -1,0 +1,78 @@
+﻿<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zn-cn" ng-app="myApp">
+<head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, minimal-ui">
+    <title>angular--services.html</title>
+    <script src="js/angular.min.js"></script>
+    <script src="js/angular-ui-router.min.js"></script>
+    <!--<script src="app.js"></script>-->
+</head>
+<body ng-controller="locationCtrl">
+    <h1>$location service API reference</h1>
+    <div id="location"></div>
+    <script type="text/javascript">
+        //创建angular 模型
+        var app = angular.module("myApp", []);
+        //定义一个控制器  myCtrl
+        app.controller("locationCtrl", myController);
+        //给控制器注入所需要的内置服务     --每个控制器里面没有注入的服务是不能在控制器内部被引用的
+        myController.$inject = ["$scope", "$location"];
+        //定义控制器的具体业务逻辑
+        function myController($scope,$location) {
+            // 1 .获取页面的当前路径：
+            var path = $location.path();
+            console.log(path);
+            // 2 .修改当前路径并跳转到应用中的另一个URL  -->修改路径并做新地址的跳转
+            $location.path("/home");
+
+            // 3.如果你希望跳转后用户不能点击后退按钮，（对于登陆之后的跳转这种发生在某个跳转之后的再次跳转很有用） 可以用angular提供的replace()方法来实现这个功能
+            $location.path("/index");
+            $location.replace();
+            //或者链式调用也可以
+            $location.path("/index").replace();
+            
+            // 4.获取编码后的完成url
+            var absUrl = $location.absUrl();
+            //console.log(absUrl);
+              
+            // 5.用来获取URL中的hash片段  -->返回当前的
+             var hash = $location.hash();
+
+            // 6 .获取URL中的主机号
+             var host = $location.host();
+             
+            // 7 .获取URL中的端口号
+             var port = $location.port();
+              
+            // 8 .获取URL中的协议
+             var protocol = $location.protocol();
+
+            // 9 .用来获取URL中的查询字符串
+             var search = $location.search();     
+
+            //注意：我们可以向这个方法中传入新的查询参数，来修改URL中的查询串部分：
+            //用对象设置查询
+            $location.search({ name: "Ari", userName: "auser" });
+            //或者用字符串设置查询
+            $location.search("name=Ari&username=auser");
+
+            // 10 .获取当前页面的URL
+            var url = $location.url();
+            //console.log(url);
+            //如果调用url()方法时传了参数，会设置并修改当前的URL，这会同时修改URL中的路径，查询串和hash，并返回$location
+
+            //// 设置新的url
+            $location.url("http://www.baidu.com");
+            ////url 方法可以接受两个参数     --1,url(可选，字符串)新的URL的基础的前缀 --2.replace(可选，字符串)想要修改成的路径
+            //console.log(url);
+             
+
+        }
+
+    </script>
+</body>
+</html>

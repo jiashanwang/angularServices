@@ -1,0 +1,62 @@
+﻿<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zn-cn" ng-app="myApp">
+<head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, minimal-ui">
+    <title>angular--services.html</title>
+    <script src="js/angular.min.js"></script>
+    <script src="js/angular-ui-router.min.js"></script>
+    <!--<script src="app.js"></script>-->
+</head>
+<body ng-controller="cacheFactoryCtrl">
+    <h1>$cacheFactory service API reference</h1>
+    <div id="cacheFactory"></div>
+    <script type="text/javascript">
+        //创建angular 模型
+        var app = angular.module("myApp", []);
+        //定义一个控制器  myCtrl
+        app.controller("cacheFactoryCtrl", myController);
+        //给控制器注入所需要的内置服务     --每个控制器里面没有注入的服务是不能在控制器内部被引用的
+        myController.$inject = ["$scope", "$cacheFactory"];
+        //定义控制器的具体业务逻辑
+        function myController($scope, $cacheFactory) {
+            //$cacheFactory 是一个为所有angular服务生成缓存对象的服务，在内部，$cacheFactory会创建一个默认的缓存对象，即使我们并没有显示的创建
+            //要创建一个缓存对象，可以使用$cacheFatory通过一个ID创建一个缓存；
+            var cache = $cacheFactory("myCache");
+            //这个$cacheFactory 方法接受两个参数
+            // 1. cacheId :这个cacheId就是创建缓存时的ID名称
+            // 2. options(对象)：这个选项用于指定缓存如何表现，一般情况下，这个选项是一个键:
+            //    capacity(number) --> 该参数表示使用缓存存储并保存的缓存键值对的最大数量
+            // 注意：cacheFactory()方法返回一个缓存对象
+            //缓存对象自身有以下方法用来与缓存交互：
+            //  A:   返回缓存对象的ID，尺寸和选项
+            cache.info();
+            console.log(cache.info());
+            // B:put()方法允许我们把任意Javascript对象的键（字符串）放进缓存中
+            cache.put("name", "jiashanwang");
+            cache.put("list", ["jia", "shan", "wang"]);
+            cache.put("obj", {name:"jiashanwang",age:26,job:"IT"})
+            // C:get():方法让我们能够访问一个键对应的缓存值，如果找到了这个键，它会返回它的值，如果没有找到，它会返回undefined；
+            var getVal1= cache.get("name");
+            var getVal2 = cache.get("list");
+            var getVal3 = cache.get("obj");
+            console.log(getVal1);
+            console.log(getVal2);
+            console.log(getVal3);
+            // D:remove():在找到一个键值对的情况下从缓存中移除它
+            cache.remove("list");
+            console.log(cache.info());
+            // E：removeAll():用于重置缓存
+            cache.removeAll();
+            // F:destory():用于从$cacheFactory 缓存注册表中移除指定缓存的所有引用
+            cache.destory();
+
+
+        }
+
+    </script>
+</body>
+</html>                                               
